@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://uisjildhq6t3"]
+
+[ext_resource type="Script" path="res://scripts/scraps.gd" id="1_mmo34"]
+[ext_resource type="Texture2D" uid="uid://n8xjy6lve4yi" path="res://assets/scrap.png" id="2_hyki4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pip6w"]
+size = Vector2(64, 64)
+
+[node name="Scrap" type="Area2D"]
+script = ExtResource("1_mmo34")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("2_hyki4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_pip6w")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

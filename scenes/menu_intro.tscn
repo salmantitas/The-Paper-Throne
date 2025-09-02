@@ -1,0 +1,58 @@
+[gd_scene load_steps=10 format=3 uid="uid://d2g1kf3vkl88n"]
+
+[ext_resource type="Script" path="res://scripts/menu.gd" id="1_iqltp"]
+[ext_resource type="PackedScene" uid="uid://mxpursg5m0qy" path="res://scenes/menu_tutorial.tscn" id="2_qt43l"]
+[ext_resource type="FontFile" uid="uid://cmbhqwiub8qr8" path="res://FrederickatheGreat-Regular.ttf" id="3_8lfnb"]
+[ext_resource type="Texture2D" uid="uid://c14l1m6jb6ebm" path="res://assets/button_play.png" id="3_kwa70"]
+[ext_resource type="PackedScene" uid="uid://cx1npgoj7q6ff" path="res://scenes/background.tscn" id="3_rq3wm"]
+[ext_resource type="Script" path="res://scripts/play_button_2.gd" id="5_exocu"]
+[ext_resource type="AudioStream" uid="uid://cct6x77eamgva" path="res://assets/mixkit-paper-slide-1530.wav" id="7_om1if"]
+
+[sub_resource type="InputEventAction" id="InputEventAction_j1ydd"]
+action = &"activate_button"
+
+[sub_resource type="Shortcut" id="Shortcut_vuv8m"]
+events = [SubResource("InputEventAction_j1ydd")]
+
+[node name="Intro" type="Node2D"]
+script = ExtResource("1_iqltp")
+next_scene = ExtResource("2_qt43l")
+
+[node name="Label" type="Label" parent="."]
+offset_left = 72.0
+offset_top = 119.0
+offset_right = 1223.0
+offset_bottom = 449.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_8lfnb")
+theme_override_font_sizes/font_size = 24
+text = "In a kingdom where everything and everyone is made of paper, 
+you are the youngest child of the Royal Family.
+Until the coup.
+Evil people made pacts with forces of damnation and acquired Infernal Blades. 
+With powers that the papermen were never meant to face,
+they invaded your castle, killed your family and took the throne.
+You escaped into the mountains, training under the hermit, who taught you how to wield your paper
+body. Now, you've returned to avenge your family, and take back the throne"
+horizontal_alignment = 1
+
+[node name="Play" type="TextureButton" parent="."]
+offset_left = 608.0
+offset_top = 505.0
+offset_right = 1203.0
+offset_bottom = 1227.0
+scale = Vector2(0.2, 0.2)
+shortcut = SubResource("Shortcut_vuv8m")
+texture_normal = ExtResource("3_kwa70")
+script = ExtResource("5_exocu")
+
+[node name="Background" parent="." instance=ExtResource("3_rq3wm")]
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_om1if")
+volume_db = 10.0
+autoplay = true
+
+[connection signal="mouse_entered" from="Play" to="Play" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Play" to="Play" method="_on_mouse_exited"]
+[connection signal="pressed" from="Play" to="." method="_on_play_pressed"]

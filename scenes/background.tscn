@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://cx1npgoj7q6ff"]
+
+[ext_resource type="Texture2D" uid="uid://dr53i3pb1dtsq" path="res://assets/background.jpeg" id="1_gmfea"]
+
+[node name="Background" type="ParallaxBackground"]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="."]
+motion_mirroring = Vector2(500, 1090)
+
+[node name="Background1" type="Sprite2D" parent="ParallaxLayer"]
+position = Vector2(718, 0)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_gmfea")
+flip_h = true

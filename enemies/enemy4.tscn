@@ -1,0 +1,157 @@
+[gd_scene load_steps=14 format=3 uid="uid://btrchnmovosa8"]
+
+[ext_resource type="Script" path="res://enemies/enemy4.gd" id="1_e3aur"]
+[ext_resource type="Texture2D" uid="uid://bs765vxaf5a1m" path="res://assets/enemy4_1.png" id="2_n1nvd"]
+[ext_resource type="AudioStream" uid="uid://cm552dgv3uwne" path="res://assets/knife-slice-41231.wav" id="3_wu58l"]
+[ext_resource type="AudioStream" uid="uid://cbyyyroawmd0d" path="res://assets/paper-rip-slow-252618.mp3" id="4_0sjwn"]
+[ext_resource type="AudioStream" uid="uid://77db8xn4s2lq" path="res://assets/cry-of-pain-357978.mp3" id="5_gbdux"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ea326"]
+atlas = ExtResource("2_n1nvd")
+region = Rect2(1, 0, 62, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ol8up"]
+atlas = ExtResource("2_n1nvd")
+region = Rect2(63, 0, 62, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kmbah"]
+atlas = ExtResource("2_n1nvd")
+region = Rect2(125, 0, 62, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yybn2"]
+atlas = ExtResource("2_n1nvd")
+region = Rect2(1, 0, 62, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qsx0d"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ea326")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ol8up")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ea326")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kmbah")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yybn2")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_ea326")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ol8up")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_ea326")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kmbah")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lpx42"]
+size = Vector2(18.5, 46)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oh651"]
+radius = 400.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sc2xw"]
+size = Vector2(20, 46)
+
+[node name="Enemy4" type="CharacterBody2D"]
+z_index = 10
+collision_layer = 2
+script = ExtResource("1_e3aur")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 3)
+sprite_frames = SubResource("SpriteFrames_qsx0d")
+animation = &"walk"
+frame_progress = 0.184661
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-6.25, 8)
+shape = SubResource("RectangleShape2D_lpx42")
+
+[node name="PlayerDetection" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetection"]
+shape = SubResource("CircleShape2D_oh651")
+
+[node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(13, 8)
+shape = SubResource("RectangleShape2D_sc2xw")
+debug_color = Color(0.821485, 0.40029, 0.0748016, 0.42)
+
+[node name="AttackCooldown" type="Timer" parent="."]
+
+[node name="DamageTaken" type="Label" parent="."]
+z_index = 40
+offset_left = -8.0
+offset_top = -55.0
+offset_right = 32.0
+offset_bottom = -32.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "-1"
+
+[node name="DamageDisplayTimer" type="Timer" parent="DamageTaken"]
+wait_time = 0.1
+
+[node name="HealthBar" type="ColorRect" parent="."]
+z_index = 20
+offset_left = -30.0
+offset_top = -38.0
+offset_right = 30.0
+offset_bottom = -33.0
+color = Color(0.339735, 6.22692e-07, 1.08294e-07, 0.588235)
+
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_wu58l")
+volume_db = -10.0
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_0sjwn")
+
+[node name="AnguishSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_gbdux")
+volume_db = -20.0
+
+[node name="AnguishTimer" type="Timer" parent="."]
+
+[node name="HitTimer" type="Timer" parent="."]
+
+[node name="ChargeTimer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="PlayerDetection" to="." method="_on_player_detection_body_entered"]
+[connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]
+[connection signal="body_entered" from="HurtBox" to="." method="_on_player_attack_range_body_entered"]
+[connection signal="body_exited" from="HurtBox" to="." method="_on_player_attack_range_body_exited"]
+[connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
+[connection signal="timeout" from="DamageTaken/DamageDisplayTimer" to="." method="_on_damage_display_timer_timeout"]
+[connection signal="timeout" from="AnguishTimer" to="." method="_on_anguish_timer_timeout"]
+[connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
+[connection signal="timeout" from="ChargeTimer" to="." method="_on_charge_timer_timeout"]

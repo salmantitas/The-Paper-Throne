@@ -1,0 +1,49 @@
+[gd_scene load_steps=10 format=3 uid="uid://b0jf1obeymav6"]
+
+[ext_resource type="Script" path="res://scripts/menu.gd" id="1_esynh"]
+[ext_resource type="PackedScene" uid="uid://d2g1kf3vkl88n" path="res://scenes/menu_intro.tscn" id="2_1xusc"]
+[ext_resource type="Texture2D" uid="uid://dr53i3pb1dtsq" path="res://assets/background.jpeg" id="3_ihquh"]
+[ext_resource type="Texture2D" uid="uid://bqlgdtift3bgx" path="res://assets/title.jpeg" id="4_c6ymt"]
+[ext_resource type="Texture2D" uid="uid://c14l1m6jb6ebm" path="res://assets/button_play.png" id="5_de2h7"]
+[ext_resource type="Script" path="res://scripts/play_button.gd" id="6_q1ybm"]
+[ext_resource type="AudioStream" uid="uid://cct6x77eamgva" path="res://assets/mixkit-paper-slide-1530.wav" id="7_d6pt4"]
+
+[sub_resource type="InputEventAction" id="InputEventAction_vearu"]
+action = &"activate_button"
+
+[sub_resource type="Shortcut" id="Shortcut_0ihre"]
+events = [SubResource("InputEventAction_vearu")]
+
+[node name="Menu" type="Node2D"]
+script = ExtResource("1_esynh")
+next_scene = ExtResource("2_1xusc")
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(63, 566)
+texture = ExtResource("3_ihquh")
+
+[node name="Title" type="Sprite2D" parent="."]
+position = Vector2(653.5, 275.5)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("4_c6ymt")
+
+[node name="Play" type="TextureButton" parent="."]
+offset_left = 598.0
+offset_top = 456.0
+offset_right = 1193.0
+offset_bottom = 1178.0
+scale = Vector2(0.2, 0.2)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+shortcut = SubResource("Shortcut_0ihre")
+texture_normal = ExtResource("5_de2h7")
+script = ExtResource("6_q1ybm")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_d6pt4")
+volume_db = 10.0
+autoplay = true
+
+[connection signal="mouse_entered" from="Play" to="Play" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Play" to="Play" method="_on_mouse_exited"]
+[connection signal="pressed" from="Play" to="." method="_on_play_pressed"]

@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://d2e1407b0lw65"]
+
+[ext_resource type="Texture2D" uid="uid://m01w1ahra1jv" path="res://assets/enemy.jpeg" id="1_8hr03"]
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_p35j6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k0msg"]
+atlas = ExtResource("1_8hr03")
+region = Rect2(0, 0, 125, 80)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gjk7j"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k0msg")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_smmhd"]
+radius = 12.0
+height = 70.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oh651"]
+radius = 75.0267
+
+[node name="Enemy" type="CharacterBody2D"]
+script = ExtResource("1_p35j6")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_gjk7j")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_smmhd")
+
+[node name="PlayerDetection" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetection"]
+shape = SubResource("CircleShape2D_oh651")
+
+[connection signal="body_entered" from="PlayerDetection" to="." method="_on_player_detection_body_entered"]

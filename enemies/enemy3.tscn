@@ -1,0 +1,141 @@
+[gd_scene load_steps=14 format=3 uid="uid://dyw0s1qejbi83"]
+
+[ext_resource type="Script" path="res://enemies/enemy3.gd" id="1_a2fer"]
+[ext_resource type="Texture2D" uid="uid://cu78jpvbkne16" path="res://assets/enemy3_1.png" id="3_j3xdq"]
+[ext_resource type="AudioStream" uid="uid://cm552dgv3uwne" path="res://assets/knife-slice-41231.wav" id="3_y7sg8"]
+[ext_resource type="AudioStream" uid="uid://cbyyyroawmd0d" path="res://assets/paper-rip-slow-252618.mp3" id="4_sfx6p"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ytpt6"]
+atlas = ExtResource("3_j3xdq")
+region = Rect2(0, 68, 64, 68)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7wikp"]
+atlas = ExtResource("3_j3xdq")
+region = Rect2(64, 68, 64, 68)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3qjaw"]
+atlas = ExtResource("3_j3xdq")
+region = Rect2(0, 0, 64, 68)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2jhj4"]
+atlas = ExtResource("3_j3xdq")
+region = Rect2(0, 0, 64, 68)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x8aic"]
+atlas = ExtResource("3_j3xdq")
+region = Rect2(64, 0, 64, 68)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nt62t"]
+animations = [{
+"frames": [{
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_ytpt6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7wikp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7wikp")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3qjaw")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2jhj4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x8aic")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fsjpu"]
+size = Vector2(21, 57)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oh651"]
+radius = 350.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nduy2"]
+size = Vector2(18, 75)
+
+[node name="Enemy3" type="CharacterBody2D"]
+z_index = 10
+collision_layer = 2
+script = ExtResource("1_a2fer")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 3)
+sprite_frames = SubResource("SpriteFrames_nt62t")
+animation = &"attack"
+frame_progress = 0.676439
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1.5, 6.5)
+shape = SubResource("RectangleShape2D_fsjpu")
+
+[node name="PlayerDetection" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetection"]
+shape = SubResource("CircleShape2D_oh651")
+
+[node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(14, 2.5)
+shape = SubResource("RectangleShape2D_nduy2")
+debug_color = Color(0.821485, 0.40029, 0.0748016, 0.42)
+
+[node name="AttackCooldown" type="Timer" parent="."]
+
+[node name="DamageTaken" type="Label" parent="."]
+z_index = 40
+offset_left = -8.0
+offset_top = -55.0
+offset_right = 32.0
+offset_bottom = -32.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "-1"
+
+[node name="DamageDisplayTimer" type="Timer" parent="DamageTaken"]
+wait_time = 0.1
+
+[node name="HealthBar" type="ColorRect" parent="."]
+z_index = 20
+offset_left = -30.0
+offset_top = -38.0
+offset_right = 30.0
+offset_bottom = -33.0
+color = Color(0.339735, 6.22692e-07, 1.08294e-07, 0.588235)
+
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_y7sg8")
+volume_db = -10.0
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_sfx6p")
+
+[node name="HitTimer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="PlayerDetection" to="." method="_on_player_detection_body_entered"]
+[connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]
+[connection signal="body_entered" from="HurtBox" to="." method="_on_player_attack_range_body_entered"]
+[connection signal="body_exited" from="HurtBox" to="." method="_on_player_attack_range_body_exited"]
+[connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
+[connection signal="timeout" from="DamageTaken/DamageDisplayTimer" to="." method="_on_damage_display_timer_timeout"]
+[connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
